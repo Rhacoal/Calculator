@@ -25,7 +25,7 @@ Just like common expressions. For example:
 6mod5+2
 (-1)*(1+23*3^2+(7+8)/7^3-21-13*3^2-21*3^2+(7+8)+23*3^2+(7+8)/7^3-21+23+(7+8)/7^3/7^3-21+23*3^2+(7+8)/7^3-2)
 ```
-Not supporting parentheses directly followed by a number like
+Not supporting parentheses directly following a number like
 >2+3(5*6)
 
 ##Modify the code
