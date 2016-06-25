@@ -13,20 +13,12 @@ public class Main {
 
         Registration.register();
 
-
-
-//        while (scanner.hasNext()) {
-//            BigDecimal result0 = new Calculation(scanner.nextLine()).calculate();
-//            System.out.println(result0);
-//        }
-
         while (true) {
 
             String expr = JOptionPane.showInputDialog("Input an expression");
             if (expr == null || expr.isEmpty()) break;
 
             BigDecimal result = null;
-            long start = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
             long millis = System.currentTimeMillis();
 
             for (int i = 0; i != 1000000; ++ i) {
@@ -34,18 +26,20 @@ public class Main {
             }
 
             long millis2 = System.currentTimeMillis();
-            long end = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
+            long memory = Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory();
 
-            String result0 =
-                    "1000k"
-                    + "\n计算结果　　\t" + result
-                    + "\n耗时　　　　\t" + (millis2 - millis)
-                    + "ms\n" + "内存占用增加\t" + (end - start)/1024D/1024D + "M"
-                    + "\n内存占用　　\t" + end/1024D/1024D + "M";
+            String result0 = String.format(
+                    "1000k times"
+                    + "\nResult\n  %s"
+                    + "\nTime used\n  %dms"
+                    + "\nMemory used\n  %.2fM"
+                    , result.toString(), (millis2 - millis), memory/1024D/1024D
+            );
 
             JOptionPane.showMessageDialog(null, result0);
 
         }
+        JOptionPane.showMessageDialog(null, "Calculator exited");
 
     }
 

@@ -2,7 +2,7 @@
   <artifact type="jar" name="calculator">
     <output-path>$PROJECT_DIR$/out/artifacts/calculator</output-path>
     <root id="archive" name="calculator.jar">
-      <element id="module-output" name="233" />
+      <element id="module-output" name="Calculator" />
       <element id="directory" name="META-INF">
         <element id="file-copy" path="$PROJECT_DIR$/META-INF/MANIFEST.MF" />
       </element>

@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 
 public class MinusOperatorNode extends BinaryOperatorNode {
 
+    @Override
     public BigDecimal calculate() {
         return getLeftChild().calculate().subtract(getRightChild().calculate());
     }
