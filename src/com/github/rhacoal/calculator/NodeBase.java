@@ -1,7 +1,6 @@
 package com.github.rhacoal.calculator;
 
 import com.github.rhacoal.calculator.specialnode.NumberNode;
-import com.github.rhacoal.calculator.specialnode.PairNode;
 import com.github.rhacoal.calculator.operator.BinaryOperatorNode;
 import com.github.rhacoal.calculator.operator.UnaryOperatorNode;
 
@@ -12,7 +11,6 @@ import java.math.BigDecimal;
  * @see UnaryOperatorNode
  * @see BinaryOperatorNode
  * @see NumberNode
- * @see PairNode
  */
 public interface NodeBase {
 
@@ -38,4 +36,7 @@ public interface NodeBase {
         return false;
     }
 
+    default boolean isPair() {
+        return false;
+    }
 }

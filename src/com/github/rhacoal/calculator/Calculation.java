@@ -1,5 +1,6 @@
 package com.github.rhacoal.calculator;
 
+import com.github.rhacoal.calculator.exception.CalculationException;
 import com.github.rhacoal.calculator.operator.OperatorNode;
 import com.github.rhacoal.calculator.operator.unaryoperator.RootNode;
 import com.github.rhacoal.calculator.operator.BinaryOperatorNode;
@@ -15,10 +16,14 @@ public class Calculation {
     private RootNode rootNode = null;
     private OperatorNode former = null;
 
-    private void expectUnaryOrNumber() throws CalculationException {
+    private enum ExpectationType {
+        UnaryOrNumber, BinaryOrRightParentheses, Null
+    }
+    
+    private ExpectationType expectUnaryOrNumber() throws CalculationException {
 
         if (index == expression.length() - 1)                                       //end of expression
-            return;
+            return ExpectationType.Null;
 
         NodeBase nb;
         char previous = expression.charAt(index);
@@ -35,35 +40,35 @@ public class Calculation {
 
         if (nb.isNumber()) {
             former.setChild(nb);
-            expectBinaryOrRightParentheses();
+            return ExpectationType.BinaryOrRightParentheses;
         } else if (nb.isOperator()) {
             ((OperatorNode)nb).setParent(former);
             former = (OperatorNode)nb;
-            expectUnaryOrNumber();
+            return ExpectationType.UnaryOrNumber;
         }
 
-    }
+        return ExpectationType.Null;
 
-    private void expectBinaryOrRightParentheses() throws CalculationException {
+    }
+    
+    private ExpectationType expectBinaryOrRightParentheses() throws CalculationException {
 
         if (index == expression.length() - 1)                                       //end of expression
-            return;
+            return ExpectationType.Null;
 
         NodeBase nb;
         char previous = expression.charAt(index);
         if (previous == ')') {                                                      //right parentheses
-            if (former == null) {
-                throw new CalculationException(expression.substring(0, index + 1) + " doesn't have a left parentheses");
-            } else {
-                while ((!former.isParentheses()) || ((ParenthesesNode) former).isClose()) {
-                    former = former.getParent();
+            while ((!former.isParentheses()) || ((ParenthesesNode) former).isClose()) {
+                former = former.getParent();
+                if (former == null) {
+                    throw new CalculationException("Position " + (index + 1) + " expected a left parentheses");
                 }
-                ((ParenthesesNode) former).raisePriority();
             }
+            ((ParenthesesNode) former).raisePriority();
             former = former.getParent();
             ++ index;
-            expectBinaryOrRightParentheses();
-            return;
+            return ExpectationType.BinaryOrRightParentheses;
         } else if (between(previous, 'a', 'z')) {                                   //binary like "mod"
             nb = OperatorNode.getOperator(readWord(), NodeType.BINARY);
         } else {                                                                    //binary like "+"
@@ -79,14 +84,15 @@ public class Calculation {
         NodeBase on_child = node.setParent(on);             //find the node with lower priority
         node.setLeftChild(on_child);                        //exchange the node's position with the previous one
         former = node;
-        expectUnaryOrNumber();
+        return ExpectationType.UnaryOrNumber;
 
     }
 
-
     private NumberNode readNumber() {
         int start_point = index;
-        while (index < expression.length() && ((between(expression.charAt(index), '0', '9')) || expression.charAt(index) == '.')) {
+        while (index < expression.length()
+                && ((between(expression.charAt(index), '0', '9'))
+                    || expression.charAt(index) == '.')) {
             index ++;
         }
         return new NumberNode(new BigDecimal(expression.substring(start_point, index)));
@@ -100,6 +106,17 @@ public class Calculation {
         return expression.substring(start_point, index);
     }
 
+    private String readOperator () {
+        int start_point = index;
+        while (!(between(expression.charAt(index), '0', '9')
+                || expression.charAt(index) == '.')
+                || between(expression.charAt(index), 'a', 'z')
+                || between(expression.charAt(index), 'A', 'Z')) {
+            index ++;
+        }
+        return expression.substring(start_point, index);
+    }
+
     private static boolean between(char c, char c1, char c2) {
         return c >= c1 && c <= c2;
     }
@@ -107,12 +124,28 @@ public class Calculation {
     public BigDecimal calculate() throws CalculationException {
         rootNode = new RootNode();
         former = rootNode;
-        expectUnaryOrNumber();
-        return rootNode.calculate();
+        ExpectationType et = ExpectationType.UnaryOrNumber;
+        while(et != ExpectationType.Null) {
+            switch (et) {
+                case UnaryOrNumber:
+                    et = expectUnaryOrNumber();
+                    break;
+                case BinaryOrRightParentheses:
+                    et = expectBinaryOrRightParentheses();
+                    break;
+                default:
+                    break;
+            }
+        }
+        try {
+            return rootNode.calculate();
+        } catch (ArithmeticException ae) {
+            throw new CalculationException(ae.getMessage());
+        }
     }
 
     public Calculation(String expression) {
-        this.expression = expression.toLowerCase() + " ";
+        this.expression = expression.toLowerCase().replace(" ", "") + " ";
     }
 
 }

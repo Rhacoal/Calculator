@@ -1,7 +1,9 @@
 package com.github.rhacoal.calculator.operator;
 
+import com.github.rhacoal.calculator.Calculation;
 import com.github.rhacoal.calculator.NodeBase;
 import com.github.rhacoal.calculator.NodeType;
+import com.github.rhacoal.calculator.exception.CalculationException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,7 +32,7 @@ public interface OperatorNode extends NodeBase {
 
     static void registerOperator(String name, Class<? extends OperatorNode> clazz, NodeType type) {
         switch (type) {
-            case BINARY: case PAIR:
+            case BINARY:
                 binaryMap.put(name, clazz);
                 break;
             case UNARY:
@@ -41,34 +43,36 @@ public interface OperatorNode extends NodeBase {
         }
     }
 
-    static OperatorNode getOperator(String name, NodeType type) {
+    static OperatorNode getOperator(String name, NodeType type) throws CalculationException {
         Class<? extends OperatorNode> clazz = null;
         switch (type) {
-            case BINARY: case PAIR:
+            case BINARY:
                 clazz = binaryMap.get(name);
                 break;
             case UNARY:
                 clazz = unaryMap.get(name);
                 break;
             case NUMBER:
-                throw new IllegalArgumentException("Number nodes not allowed for this method!");
+                throw new CalculationException("No number as operators.");
         }
         if (clazz == null)
-            return null;
+            throw new CalculationException(
+                    (type == NodeType.BINARY ? "Binary" : "Unary") + " operator \"" + name + "\" doesn't exist."
+            );
         else {
             OperatorNode node;
             try {
                 node = clazz.newInstance();
-            } catch (InstantiationException ex) {
-                return null;
-            } catch (IllegalAccessException ex) {
-                return null;
+            } catch (InstantiationException | IllegalAccessException ex) {
+                throw new CalculationException(
+                        "Operator \"" + name + "\" is unavailable to be created an instance with."
+                );
             }
             return node;
         }
     }
 
-    static OperatorNode getOperator(char name, NodeType type) {
+    static OperatorNode getOperator(char name, NodeType type) throws CalculationException {
         return getOperator(new String(new char[]{name}),type);
     }
 

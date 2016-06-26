@@ -1,26 +1,30 @@
 package com.github.rhacoal.calculator;
 
-import com.github.rhacoal.calculator.operator.OperatorNode;
 import com.github.rhacoal.calculator.operator.binaryoperator.*;
-import com.github.rhacoal.calculator.operator.unaryoperator.UnaryMinusOperatorNode;
-import com.github.rhacoal.calculator.specialnode.PairNode;
-import com.github.rhacoal.calculator.operator.unaryoperator.ParenthesesNode;
+import com.github.rhacoal.calculator.operator.unaryoperator.*;
+
+import static com.github.rhacoal.calculator.NodeType.*;
+import static com.github.rhacoal.calculator.operator.OperatorNode.registerOperator;
 
 public class Registration {
 
     public static void register() {
-        OperatorNode.registerOperator("+", PlusOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator("-", MinusOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator("*", MultiplicationOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator("/", DivisionOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator("e", ExponentOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator("^", PowerOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator(",", PairNode.class, NodeType.PAIR);
-        OperatorNode.registerOperator("mod", ModAndRemOperatorNode.ModOperatorNode.class, NodeType.BINARY);
-        OperatorNode.registerOperator("rem", ModAndRemOperatorNode.RemOperatorNode.class, NodeType.BINARY);
+        registerOperator("+", PlusOperatorNode.class, BINARY);
+        registerOperator("-", MinusOperatorNode.class, BINARY);
+        registerOperator("*", MultiplicationOperatorNode.class, BINARY);
+        registerOperator("/", DivisionOperatorNode.class, BINARY);
+        registerOperator("e", ExponentOperatorNode.class, BINARY);
+        registerOperator("^", PowerOperatorNode.class, BINARY);
+        registerOperator(",", CommaOperatorNode.class, BINARY);
+        registerOperator("mod", ModAndRemOperatorNode.ModOperatorNode.class, BINARY);
+        registerOperator("rem", ModAndRemOperatorNode.RemOperatorNode.class, BINARY);
+        registerOperator("%", ModAndRemOperatorNode.RemOperatorNode.class, BINARY);
 
-        OperatorNode.registerOperator("(", ParenthesesNode.class, NodeType.UNARY);
-        OperatorNode.registerOperator("-", UnaryMinusOperatorNode.class, NodeType.UNARY);
+        registerOperator("(", ParenthesesNode.class, UNARY);
+        registerOperator("-", UnaryMinusOperatorNode.class, UNARY);
+        registerOperator("log", LogOperatorNode.class, UNARY);
+        registerOperator("lg", LgOperatorNode.class, UNARY);
+        registerOperator("ln", LnOperatorNode.class, UNARY);
     }
 
 }
