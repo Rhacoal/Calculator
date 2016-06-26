@@ -1,8 +1,9 @@
 # Calculator
 Calculate expressions
 ## Usage
-When running the program, a dialog will show up informing you to input a expression. 
-Then it will calculated the expression for 1000k times and output the time used.
+<p>When running the program, a dialog will show up informing you to input a expression. 
+Then it will calculated the expression output the result.</p>
+<p>If you want to stop the calculator, simply click 'cancel'</p>
 ###Supporting operators
 ####Binary Operators
 - plus(+)
@@ -24,6 +25,7 @@ Then it will calculated the expression for 1000k times and output the time used.
 
 ####Pair Operators
 > consumes a pair like log(2,8)
+
 - logarithm(log)
 
 ###Format
