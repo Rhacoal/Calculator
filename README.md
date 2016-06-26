@@ -55,6 +55,7 @@ For example, this PlusOperatorNode
 ```java
 package com.github.rhacoal.calculator.operator.binaryoperator;
 
+import com.github.rhacoal.calculator.exception.CalculationException;
 import com.github.rhacoal.calculator.operator.BinaryOperatorNode;
 
 import java.math.BigDecimal;
