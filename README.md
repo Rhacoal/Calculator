@@ -13,9 +13,18 @@ Then it will calculated the expression for 1000k times and output the time used.
 - power(^)
 - modulo(mod)
 - reminder(rem)
+- comma(,)
 
 ####Unary Operators
-- negate(-)
+- negative(-)
+- positive(+)
+- logarithm(log)
+- common logarithm(lg)
+- natural logarithm(ln)
+
+####Pair Operators
+> consumes a pair like log(2,8)
+- logarithm(log)
 
 ###Format
 Just like common expressions. For example:
@@ -24,6 +33,8 @@ Just like common expressions. For example:
 8e10-7e20
 6mod5+2
 (-1)*(1+23*3^2+(7+8)/7^3-21-13*3^2-21*3^2+(7+8)+23*3^2+(7+8)/7^3-21+23+(7+8)/7^3/7^3-21+23*3^2+(7+8)/7^3-2)
+3+log(3,9)
+lg7*lg8*lg9
 ```
 Not supporting parentheses directly following a number like
 >2+3(5*6)
@@ -33,7 +44,7 @@ You may easily modify the code and add new operators
 ###Create a new operator
 For unary prefix operator, create a class which extends UnaryOperatorNode 
 and register it in Registration.java by adding a line to register()
-```
+```java
 registerOperator("youroperatorname", YourOperatorClass.class, UNARY);
 ```
 And for binary operators, create a class which extends BinaryOperatorNode and register it with type BINARY instead of UNARY.
