@@ -62,7 +62,7 @@ import java.math.BigDecimal;
 public class PlusOperatorNode extends BinaryOperatorNode {
 
     @Override
-    public BigDecimal calculate() {
+    public BigDecimal calculate() throws CalculationException {
         return getLeftChild().calculate().add(getRightChild().calculate());
     }
 

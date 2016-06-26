@@ -2,6 +2,7 @@ package com.github.rhacoal.calculator.specialnode;
 
 import com.github.rhacoal.calculator.NodeType;
 import com.github.rhacoal.calculator.NodeBase;
+import com.github.rhacoal.calculator.exception.CalculationException;
 
 import java.math.BigDecimal;
 
@@ -15,7 +16,7 @@ public class NumberNode implements NodeBase {
     }
 
     @Override
-    public BigDecimal calculate() {
+    public BigDecimal calculate() throws CalculationException {
         return value;
     }
 

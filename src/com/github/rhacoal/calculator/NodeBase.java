@@ -1,5 +1,6 @@
 package com.github.rhacoal.calculator;
 
+import com.github.rhacoal.calculator.exception.CalculationException;
 import com.github.rhacoal.calculator.specialnode.NumberNode;
 import com.github.rhacoal.calculator.operator.BinaryOperatorNode;
 import com.github.rhacoal.calculator.operator.UnaryOperatorNode;
@@ -16,7 +17,7 @@ public interface NodeBase {
 
     NodeType getNodeType();
 
-    BigDecimal calculate();
+    BigDecimal calculate() throws CalculationException;
 
     int getPriority();
 

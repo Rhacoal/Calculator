@@ -141,6 +141,8 @@ public class Calculation {
             return rootNode.calculate();
         } catch (ArithmeticException ae) {
             throw new CalculationException(ae.getMessage());
+        } catch (NullPointerException ne) {
+            throw new CalculationException("Illegal expression");
         }
     }
 

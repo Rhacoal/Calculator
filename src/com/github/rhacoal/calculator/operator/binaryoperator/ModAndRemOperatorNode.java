@@ -1,5 +1,6 @@
 package com.github.rhacoal.calculator.operator.binaryoperator;
 
+import com.github.rhacoal.calculator.exception.CalculationException;
 import com.github.rhacoal.calculator.operator.BinaryOperatorNode;
 
 import java.math.BigDecimal;
@@ -15,7 +16,7 @@ public abstract class ModAndRemOperatorNode extends BinaryOperatorNode {
     public static class RemOperatorNode extends ModAndRemOperatorNode {
 
         @Override
-        public BigDecimal calculate() {
+        public BigDecimal calculate() throws CalculationException {
             return getLeftChild().calculate().remainder(getRightChild().calculate());
         }
 
@@ -24,7 +25,7 @@ public abstract class ModAndRemOperatorNode extends BinaryOperatorNode {
     public static class ModOperatorNode extends ModAndRemOperatorNode {
 
         @Override
-        public BigDecimal calculate() {
+        public BigDecimal calculate() throws CalculationException {
             BigDecimal lval = getLeftChild().calculate();
             BigDecimal rval = getRightChild().calculate();
             return lval.subtract(rval.multiply(new BigDecimal(lval.divide(rval, 0 , RoundingMode.FLOOR).toBigInteger())));
