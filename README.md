@@ -28,6 +28,9 @@ Then it will calculated the expression output the result.</p>
 
 - logarithm(log)
 
+####Suffix Operators
+- Factorial(!)
+
 ###Format
 Just like common expressions. For example:
 ```
@@ -47,7 +50,7 @@ You may easily modify the code and add new operators
 For unary prefix operator, create a class which extends UnaryOperatorNode 
 and register it in Registration.java by adding a line to register()
 ```java
-registerOperator("youroperatorname", YourOperatorClass.class, UNARY);
+registerOperator("youroperatorname", YourOperatorClass.class, PREFIX);
 ```
 And for binary operators, create a class which extends BinaryOperatorNode and register it with type BINARY instead of UNARY.
 ####Implementing Methods
