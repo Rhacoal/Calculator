@@ -2,6 +2,7 @@ package com.github.rhacoal.calculator;
 
 import com.github.rhacoal.calculator.exception.CalculationException;
 import com.github.rhacoal.calculator.operator.OperatorNode;
+import com.github.rhacoal.calculator.operator.SuffixOperatorNode;
 import com.github.rhacoal.calculator.operator.unaryoperator.RootNode;
 import com.github.rhacoal.calculator.operator.BinaryOperatorNode;
 import com.github.rhacoal.calculator.operator.unaryoperator.ParenthesesNode;
@@ -17,7 +18,7 @@ public class Calculation {
     private OperatorNode former = null;
 
     private enum ExpectationType {
-        UnaryOrNumber, BinaryOrRightParentheses, Null
+        UnaryOrNumber, SuffixOrBinaryOrRightParentheses, Null
     }
     
     private ExpectationType expectUnaryOrNumber() throws CalculationException {
@@ -31,16 +32,16 @@ public class Calculation {
             nb = readNumber();
         } else {
             if (between(previous, 'a', 'z')) {                                  //unary like "sqrt"
-                nb = OperatorNode.getOperator(readWord(), NodeType.UNARY);
+                nb = OperatorNode.getOperator(readWord(), NodeType.PREFIX);
             } else {                                                            //unary like "-"
-                nb = OperatorNode.getOperator(previous, NodeType.UNARY);
+                nb = OperatorNode.getOperator(previous, NodeType.PREFIX);
                 ++ index;
             }
         }
 
         if (nb.isNumber()) {
             former.setChild(nb);
-            return ExpectationType.BinaryOrRightParentheses;
+            return ExpectationType.SuffixOrBinaryOrRightParentheses;
         } else if (nb.isOperator()) {
             ((OperatorNode)nb).setParent(former);
             former = (OperatorNode)nb;
@@ -51,7 +52,7 @@ public class Calculation {
 
     }
     
-    private ExpectationType expectBinaryOrRightParentheses() throws CalculationException {
+    private ExpectationType expectSuffixOrBinaryOrRightParentheses() throws CalculationException {
 
         if (index == expression.length() - 1)                                       //end of expression
             return ExpectationType.Null;
@@ -68,7 +69,7 @@ public class Calculation {
             ((ParenthesesNode) former).raisePriority();
             former = former.getParent();
             ++ index;
-            return ExpectationType.BinaryOrRightParentheses;
+            return ExpectationType.SuffixOrBinaryOrRightParentheses;
         } else if (between(previous, 'a', 'z')) {                                   //binary like "mod"
             nb = OperatorNode.getOperator(readWord(), NodeType.BINARY);
         } else {                                                                    //binary like "+"
@@ -76,15 +77,27 @@ public class Calculation {
             ++ index;
         }
 
-        OperatorNode on = former;
-        BinaryOperatorNode node = (BinaryOperatorNode) nb;
-        while (nb.getPriority() <= on.getPriority()) {
-            on = on.getParent();
+        if (nb.getNodeType() == NodeType.BINARY) {
+            OperatorNode on = former;
+            BinaryOperatorNode node = (BinaryOperatorNode) nb;
+            while (nb.getPriority() <= on.getPriority()) {
+                on = on.getParent();
+            }
+            NodeBase on_child = node.setParent(on);             //find the node with lower priority
+            node.setLeftChild(on_child);                        //exchange the node's position with the previous one
+            former = node;
+            return ExpectationType.UnaryOrNumber;
+        } else {
+            OperatorNode on = former;
+            SuffixOperatorNode node = (SuffixOperatorNode) nb;
+            while (nb.getPriority() <= on.getPriority()) {
+                on = on.getParent();
+            }
+            NodeBase on_child = node.setParent(on);             //find the node with lower priority
+            node.setChild(on_child);                        //exchange the node's position with the previous one
+            former = on;
+            return ExpectationType.SuffixOrBinaryOrRightParentheses;
         }
-        NodeBase on_child = node.setParent(on);             //find the node with lower priority
-        node.setLeftChild(on_child);                        //exchange the node's position with the previous one
-        former = node;
-        return ExpectationType.UnaryOrNumber;
 
     }
 
@@ -130,8 +143,8 @@ public class Calculation {
                 case UnaryOrNumber:
                     et = expectUnaryOrNumber();
                     break;
-                case BinaryOrRightParentheses:
-                    et = expectBinaryOrRightParentheses();
+                case SuffixOrBinaryOrRightParentheses:
+                    et = expectSuffixOrBinaryOrRightParentheses();
                     break;
                 default:
                     break;

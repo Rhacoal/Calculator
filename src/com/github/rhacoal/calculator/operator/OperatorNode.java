@@ -1,6 +1,5 @@
 package com.github.rhacoal.calculator.operator;
 
-import com.github.rhacoal.calculator.Calculation;
 import com.github.rhacoal.calculator.NodeBase;
 import com.github.rhacoal.calculator.NodeType;
 import com.github.rhacoal.calculator.exception.CalculationException;
@@ -27,16 +26,16 @@ public interface OperatorNode extends NodeBase {
     NodeBase setParent(OperatorNode node);
 
 
-    Map<String, Class<? extends OperatorNode>> unaryMap = new HashMap<>();
+    Map<String, Class<? extends OperatorNode>> prefixMap = new HashMap<>();
     Map<String, Class<? extends OperatorNode>> binaryMap = new HashMap<>();
 
     static void registerOperator(String name, Class<? extends OperatorNode> clazz, NodeType type) {
         switch (type) {
-            case BINARY:
+            case BINARY: case SUFFIX:
                 binaryMap.put(name, clazz);
                 break;
-            case UNARY:
-                unaryMap.put(name, clazz);
+            case PREFIX:
+                prefixMap.put(name, clazz);
                 break;
             case NUMBER:
                 throw new IllegalArgumentException("Number nodes not allowed to register!");
@@ -46,11 +45,11 @@ public interface OperatorNode extends NodeBase {
     static OperatorNode getOperator(String name, NodeType type) throws CalculationException {
         Class<? extends OperatorNode> clazz = null;
         switch (type) {
-            case BINARY:
+            case BINARY: case SUFFIX:
                 clazz = binaryMap.get(name);
                 break;
-            case UNARY:
-                clazz = unaryMap.get(name);
+            case PREFIX:
+                clazz = prefixMap.get(name);
                 break;
             case NUMBER:
                 throw new CalculationException("No number as operators.");

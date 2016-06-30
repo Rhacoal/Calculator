@@ -14,6 +14,6 @@ public class UnaryPlusOperator extends UnaryOperatorNode {
 
     @Override
     public int getPriority() {
-        return 100;
+        return 90;
     }
 }

@@ -22,7 +22,7 @@ public abstract class UnaryOperatorNode implements OperatorNode {
 
     @Override
     public NodeType getNodeType() {
-        return NodeType.UNARY;
+        return NodeType.PREFIX;
     }
 
     @Override

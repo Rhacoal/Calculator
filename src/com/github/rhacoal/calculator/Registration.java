@@ -1,6 +1,7 @@
 package com.github.rhacoal.calculator;
 
 import com.github.rhacoal.calculator.operator.binaryoperator.*;
+import com.github.rhacoal.calculator.operator.suffixoperator.FactorialOperatorNode;
 import com.github.rhacoal.calculator.operator.unaryoperator.*;
 
 import static com.github.rhacoal.calculator.NodeType.*;
@@ -20,11 +21,14 @@ public class Registration {
         registerOperator("rem", ModAndRemOperatorNode.RemOperatorNode.class, BINARY);
         registerOperator("%", ModAndRemOperatorNode.RemOperatorNode.class, BINARY);
 
-        registerOperator("(", ParenthesesNode.class, UNARY);
-        registerOperator("-", UnaryMinusOperatorNode.class, UNARY);
-        registerOperator("log", LogOperatorNode.class, UNARY);
-        registerOperator("lg", LgOperatorNode.class, UNARY);
-        registerOperator("ln", LnOperatorNode.class, UNARY);
+        registerOperator("(", ParenthesesNode.class, PREFIX);
+        registerOperator("-", UnaryMinusOperatorNode.class, PREFIX);
+        registerOperator("+", UnaryPlusOperator.class, PREFIX);
+        registerOperator("log", LogOperatorNode.class, PREFIX);
+        registerOperator("lg", LgOperatorNode.class, PREFIX);
+        registerOperator("ln", LnOperatorNode.class, PREFIX);
+
+        registerOperator("!", FactorialOperatorNode.class, SUFFIX);
     }
 
 }
