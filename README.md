@@ -4,7 +4,7 @@ Calculate expressions
 <p>When running the program, a dialog will show up informing you to input a expression. 
 Then it will calculated the expression output the result.</p>
 <p>If you want to stop the calculator, simply click 'cancel'</p>
-###Supporting operators
+###Supported operators
 ####Binary Operators
 - plus(+)
 - minus(-)
